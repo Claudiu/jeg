@@ -3,9 +3,12 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
+#include <string.h>
 
 #include <sndfile.h>
 #include <portaudio.h>
+#include <unistd.h>
+#include <stdint.h>
 
 #define OUTPUT_FILE "wub.wav"
 
@@ -49,6 +52,9 @@ float	bass_vol = 0.0f;
 float	bass_freq, bass_lfoval, bass_lfofreq,
 		bass_fmmod = 2.0, bass_fmindex;
 float	bass_z; /* filter internal */
+
+int32_t * convert_buf = NULL;
+int to_stdout = 0, mute = 0;
 
 /* filter frequencies */
 float flt_freq[] = {
@@ -201,6 +207,18 @@ static int audio_callback(	const void *inputBuffer, void *outputBuffer,
 	}
 
 	sf_write_float( wave_output, out, framesPerBuffer );
+    if (to_stdout)
+    {
+        for (i = 0; i < framesPerBuffer; i++)
+        {
+            double f = (double)out[i];
+            convert_buf[i] = (int32_t)(f * 0x7fffffffL);
+        }
+        write(STDOUT_FILENO, convert_buf, framesPerBuffer * 4);
+    }
+
+    if (mute)
+        memset(out, 0, sizeof(float) * framesPerBuffer);
 
 	return paContinue;
 }
@@ -212,11 +230,24 @@ void gen_default_drums( void )
 	gen_drum( hh, SAMPLE_RATE, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.9995f, 0.0f );
 }
 
-int main( void )
+int main( int argc, const char ** argv )
 {
 	PaStreamParameters outputParameters;
 	PaError pa_err;
 	SF_INFO sfinfo;
+
+    int i;
+    for (i = 1; i < argc; i++)
+    {
+        if (!strncmp(argv[i], "-m", 2))
+        {
+            mute = 1;
+        }
+        if (!strncmp(argv[i], "-o", 2))
+        {
+            to_stdout = 1;
+        }
+    }
 
 	gen_default_drums();
 
@@ -233,6 +264,8 @@ int main( void )
 	sfinfo.format = SF_FORMAT_WAV | SF_FORMAT_FLOAT;
 	wave_output = sf_open( OUTPUT_FILE, SFM_WRITE, &sfinfo );
 
+    convert_buf = (int32_t*)malloc(SAMPLE_RATE * 4 * 2);
+
 	srand( time( 0 ) );
 
 	bass_z = 0.0f;
@@ -241,7 +274,7 @@ int main( void )
 	pa_err = Pa_StartStream( stream );
 	
 	while( 1 )
-		Pa_Sleep( 1000 );
+		Pa_Sleep( 10000 );
 
 	sf_close( wave_output );
 	pa_err = Pa_StopStream( stream );

@@ -1,0 +1,15 @@
+<ezstream>
+    <url>http://localhost:8000/radiobeci</url>
+    <sourcepassword>radiojegoscelmaijegos</sourcepassword>
+    <format>MP3</format>
+    <filename>stdin</filename>
+    <stream_once>1</stream_once>
+    <svrinfoname>Radio Beci</svrinfoname>
+    <svrinfourl>http://10.100.0.177</svrinfourl>
+    <svrinfogenre>Dubstep</svrinfogenre>
+    <svrinfodescription>Un radio cu prea mult http://github.com/deveah/jeg</svrinfodescription>
+    <svrinfobitrate>16</svrinfobitrate>
+    <svrinfochannels>1</svrinfochannels>
+    <svrinfosamplerate>44100</svrinfosamplerate>
+    <svrinfopublic>1</svrinfopublic>
+</ezstream>
