@@ -15,19 +15,19 @@
 #define SAMPLE_RATE 44100
 #define BUFFER_SIZE 512
 #define CHANNELS 1
-#define DEFAULT_BPM 200
-#define BEATS_PER_MEASURE 8
+#define DEFAULT_BPM 123
+#define BEATS_PER_MEASURE 16
 
-#define A4_FREQ 440.0f
-#define BASE_NOTE 28
+#define A4_FREQ 330.0f
+#define BASE_NOTE 33
 
-#define RANDOM_GLITCH_CHANCE 3
+#define RANDOM_GLITCH_CHANCE 5
 #define RANDOM_GLITCH_RETURN_CHANCE 3
 #define RANDOM_NOTE_CHANGE_CHANCE 20
-#define RANDOM_SNARE_CHANCE 4
+#define RANDOM_SNARE_CHANCE 3
 #define RANDOM_MODULATION 5
 #define RANDOM_SNARE_SILENCE_CHANCE 3
-#define RANDOM_OCTAVE_JUMP_CHANCE 3
+#define RANDOM_OCTAVE_JUMP_CHANCE 1
 
 #define sgn(x) (((x)<0)?-1.0f:1.0f)
 
@@ -226,7 +226,7 @@ static int audio_callback(	const void *inputBuffer, void *outputBuffer,
 void gen_default_drums( void )
 {
 	gen_drum( bd, SAMPLE_RATE, 2.0f, 0.9995f, 35.0f, 0.001f, 5.0f, 0.99f, 0.93f );
-	gen_drum( sd, SAMPLE_RATE, 2.0f, 0.9995f, 70.0f, 0.002f, 1.0f, 0.9998f, 0.5f );
+	gen_drum( sd, SAMPLE_RATE, 2.0f, 0.9995f, 70.0f, 0.002f, 1.0f, 0.9995f, 0.5f );
 	gen_drum( hh, SAMPLE_RATE, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.9995f, 0.0f );
 }
 
